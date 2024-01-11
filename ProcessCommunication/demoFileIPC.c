@@ -30,7 +30,7 @@ int main()
         if (fd == -1)
         {
             perror("open error");
-        }
+        } 
 
         write(fd, (void *)&num, sizeof(num));
         close(fd);
