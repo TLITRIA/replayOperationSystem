@@ -29,7 +29,10 @@ int main()
         /* 规定子进程写，则关闭读通道 */
         close(pipefd[0]);
 
-        int num =2900;
+
+        /* 子进程写 */
+        sleep(2);
+        int num = 2900;
         write(pipefd[1], (void *)&num, sizeof(num));
 
         #if 0
@@ -42,15 +45,40 @@ int main()
     else if (pid > 0)
     {
         sleep(1);
-        /* 关闭写端 */
-        close(pipefd[1]);
 
+        close(pipefd[1]);
+        /* 3步把read设置非阻塞 */
+        int flags = fcntl(pipefd[0], F_GETFL);
+        
+        flags |= O_NONBLOCK;
+        printf("flag:%d\n", flags);
+        int ret = fcntl(pipefd[0], F_SETFL, flags);
+        if (ret == -1)
+        {
+            perror("fcntl setfd error");
+        }
+        
+#if 1
+        /* 父进程读 */
         int readNum = 0;
-        read(pipefd[0], (void *)&readNum, sizeof(readNum));
-        printf("parent process: readNum:%d\n", readNum);
+        ret = read(pipefd[0], (void *)&readNum, sizeof(readNum));
+        printf("parent|ret:%d\n", ret);
+
 
         close(pipefd[0]);
+
+        printf("parent process: readNum:%d\n", readNum);
+#endif
+        
+
+        _exit(0);
     }
+
+    while (1)
+    {
+        sleep(3);
+    }
+    
     
 
 
