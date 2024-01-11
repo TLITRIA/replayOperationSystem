@@ -6,37 +6,33 @@
 #include <fcntl.h>
 #include <errno.h>
 #include <string.h>
+#include <stdlib.h>
 
 
 #define BUFFER_SIZE 32
+#define PIPE_SIZE 2
+/* 打印long类型 */
+#define PRINT_LINT(p)    \
+printf("%s:%ld\n", #p, p);\
+/* 打印int类型 */
+#define PRINT_INT(p)    \
+printf("%s:%d\n", #p, p);\
+
 int main()
 {
-    int ret = access("./testfifo", F_OK);
-    if (ret == -1)
-    {
-        perror("access error");
-        _exit(-1);
-    }
+    int pipefd[PIPE_SIZE];
+    memset(pipefd, 0, sizeof(pipefd));
 
-    int fd = open("./testfifo", O_RDWR);
-    if (fd == -1)
-    {
-        
-        perror("open error");
-        _exit(-1);
-    }
+    pipe(pipefd);
 
-    char buf[BUFFER_SIZE];
-    memset(buf, 0, sizeof(buf));
-
-    int bytes = read(fd, buf, sizeof(buf) - 1);
-    if (bytes < 0)
-    {
-        perror("read error");
-        close(fd);
-        _exit(-1);
-    }
+    /* 查看缓冲区函数 */
+    long bufferSize = fpathconf(pipefd[0], _PC_PIPE_BUF);
+    PRINT_LINT(bufferSize);
     
+    bufferSize = fpathconf(pipefd[1], _PC_PIPE_BUF);
+    PRINT_LINT(bufferSize);
 
-    close(fd); 
+
+
+    return 0;
 }

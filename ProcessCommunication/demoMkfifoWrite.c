@@ -17,7 +17,9 @@ printf("%s:%ld\n", #p, p);\
 /* 打印int类型 */
 #define PRINT_INT(p)    \
 printf("%s:%d\n", #p, p);\
-
+/* 打印字符串 */
+#define PRINT_STR(p)    \
+printf("%s:%s\n", #p, p);\
 
 int main()
 {
@@ -41,12 +43,16 @@ int main()
     }
 
     char buf[BUFFER_SIZE];
-    memset(buf, 0, sizeof(buf));
-    strncpy(buf, "helloworld", sizeof(buf));
-
-
-    write(fd, buf, sizeof(buf));
-
+    while (1)
+    {
+        memset(buf, 0, sizeof(buf));
+        strncpy(buf, "helloworld", sizeof(buf));
+        write(fd, buf, sizeof(buf));
+        PRINT_STR(buf);
+        sleep(1);
+    }
+    
+    
     
 
 
