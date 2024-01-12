@@ -10,7 +10,6 @@
 
 
 #define BUFFER_SIZE 32
-#define PIPE_SIZE 2
 /* 打印long类型 */
 #define PRINT_LINT(p)    \
 printf("%s:%ld\n", #p, p);\
@@ -38,7 +37,7 @@ int main()
     int fd = open("./testfifo", O_RDWR);
     if (fd == -1)
     {
-        perror("opne error");
+        perror("open error");
         _exit(-1);
     }
 
@@ -46,17 +45,12 @@ int main()
     while (1)
     {
         memset(buf, 0, sizeof(buf));
-        strncpy(buf, "helloworld", sizeof(buf));
-        write(fd, buf, sizeof(buf));
+        strncpy(buf, "helloworld", sizeof(buf) - 1);
+        write(fd, buf, strlen(buf)); // 函数使用错误，不是sizeof
         PRINT_STR(buf);
         sleep(1);
     }
     
-    
-    
-
-
-
-    
+    close(fd);
     return 0;
 }

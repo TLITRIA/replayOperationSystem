@@ -34,11 +34,13 @@ int main()
     int fd = open("./testfifo", O_RDWR | O_NONBLOCK);
     if (fd == -1)
     {
-        perror("opne error");
+        perror("open error");
         _exit(-1);
     }
 
     /* 可以设置非阻塞 */
+
+
     char buf[BUFFER_SIZE];
     while (1)
     {
@@ -50,15 +52,11 @@ int main()
             close(fd);      //注意
             _exit(-1);
         }
+        // printf ("buf:%s\n", buf);
         PRINT_STR(buf);
-        PRINT_INT(bytes);
+        // PRINT_INT(bytes);
         sleep(2);
     }
-    
-    
-
-
-
     close(fd);
     return 0;
 }
